@@ -1,3 +1,4 @@
+import numpy as np
 #Finding Z vector
 def find_z(X):
     total=0
