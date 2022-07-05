@@ -342,7 +342,7 @@ for subsample_size in subsample_sizes:
         total_edges_budget = []
         final_edge_matrix = {}
         for eps in eps_user:
-            edge_matrix, total_edge_matrix, total_edges = L2L_infinityEdgeMatrix.loss(eps,X_c1_curr,X_c2_curr)
+            edge_matrix, total_edge_matrix, total_edges = L2L_infinityEdgeMatrix.edge_matrix_calculator(eps,X_c1_curr,X_c2_curr)
             total_edge_matrix_budget[tuple(eps)] = total_edge_matrix
             total_edges_budget.append((eps, total_edges))
             final_edge_matrix[tuple(eps)] = edge_matrix
