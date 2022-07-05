@@ -8,48 +8,48 @@ def find_z(X):
     z=np.array(z) # Final Z vector
     return z
 
-
-# Finding Optimal K using Linear Search and finding lambda value
-def test_l1_l2(X, epsilon_1, epsilon2):
-    X = abs(X)
-    X.sort()
-    X = X[::-1]
-    z = find_z(X)
-    for k in range(1, X.shape[0] + 1):
-        if k * X[k - 1] <= z[k] - epsilon_1:  # Condition to find k value
-            break
-        else:
+#Finding Optimal K using Linear Search and finding lambda value
+def test_l1_l2(X,epsilon_1,epsilon2):
+      X=abs(X)
+      X.sort()
+      X=X[::-1]
+      w=X[0]-epsilon_1
+      for k in range(1,X.shape[0]):
+        if w<k*X[k]:
+            w+=X[k]
             continue
-    lambda_value = ((z[k] - epsilon_1) / k)  # Finding Lambda value using k
-
-    return [z, k, lambda_value]
+        else:
+            break
+      lambda_value=w/k
+      
+      return [X,k,lambda_value]
 #Finding Minimum Epsilon 2 that intersects Epsilon 1
 def find_epsilon_2(K,ans,lambda_value):
-    y=[] # Finding Y vector
+    y=[]
     for i in range(0,ans.shape[0]):
         if i<K:
             y.append(lambda_value)
         else:
             y.append(abs(ans[i]))
     y=np.array(y)
-    distance=np.linalg.norm(y) # Min Epsilon 2 value using y vector
-    return y,distance
+    distance=np.linalg.norm(y)
+    return distance
 
 
 # When both the norms are different
-def different_norm(X_c1_curr, X_c2_curr, epsilon_1, epsilon2):
-    new = np.zeros([X_c1_curr.shape[0], X_c2_curr.shape[0]])
-    for i in (range(X_c1_curr.shape[0])):
+def different_norm(X_c1_curr,X_c2_curr,epsilon_1,epsilon2):
+  new=np.zeros([X_c1_curr.shape[0],X_c2_curr.shape[0]])
+  for i in (range(X_c1_curr.shape[0])):
         for j in range(X_c2_curr.shape[0]):
-            ans = abs(X_c1_curr[i] - X_c2_curr[j])
-            K, lambda_value = test_l1_l2(ans, epsilon_1, epsilon2)  # Find K and Lambda value using function
-            y, min_epsilon_2 = find_epsilon_2(K, ans, lambda_value)  # Find y and min epsilon
-            if epsilon2 >= min_epsilon_2:
-                new[i][j] = 1
+            ans=abs(X_c1_curr[i]-X_c2_curr[j])
+            X,K,lambda_value=test_l1_l2(ans,epsilon_1,epsilon2)
+            min_epsilon_2=find_epsilon_2(K,X,lambda_value)
+            if epsilon2>=min_epsilon_2:
+               new[i][j]=1
             else:
-                new[i][j] = 0
-
-    return new, y, abs(ans)
+                new[i][j]=0
+                
+  return new
 # when both norms are epsilon1
 def same_norm_l2(X_c1_curr,X_c2_curr,epsilon_1,epsilon_2):
     new=np.zeros([X_c1_curr.shape[0],X_c2_curr.shape[0]])
@@ -73,7 +73,7 @@ def same_norm_l1(X_c1_curr,X_c2_curr,epsilon_1,epsilon_2):
                 new[i][j]=0
     return new
 
-def loss(epsilon_user, X_c1_curr, X_c2_curr):
+def edge_matrix_calculator(epsilon_user, X_c1_curr, X_c2_curr):
     total_edge_matrix = np.empty([len(epsilon_user), len(epsilon_user)], dtype=float)
     edge_matrixes = {}
     total_edges = 0
