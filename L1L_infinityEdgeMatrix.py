@@ -50,7 +50,7 @@ def different_norm(X_c1_curr, X_c2_curr, epsilon_2, epsilon_infinity):
     return new
 
 
-def loss(epsilon_user,X_c1_curr,X_c2_curr):
+def edge_matrix_calculator(epsilon_user,X_c1_curr,X_c2_curr):
     total_edge_matrix = np.empty([len(epsilon_user), len(epsilon_user)], dtype=float)
     edge_matrixes = {}
     total_edges=0
