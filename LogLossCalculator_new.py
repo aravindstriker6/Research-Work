@@ -110,7 +110,7 @@ def find_remaining_cap_edges(edge_ptr,capacities,heads,tails, source, sink):
                 if end == n_verts:
                     end = 0
     return path_edges
-def create_graph_rep(edge_matrix,n_1,n_2):
+def create_graph_rep(edge_matrix,n_1,n_2,weights):
     graph_rep = []
     for i in range(n_1+n_2+2):
         graph_rep.append([])
@@ -120,7 +120,7 @@ def create_graph_rep(edge_matrix,n_1,n_2):
                 if j==0:
                     graph_rep[i].append(0)
                 elif 1<=j<=n_1:
-                    graph_rep[i].append(1)
+                    graph_rep[i].append(weights[j-1])
                 elif n_1<j<=n_1+n_2+1:
                     graph_rep[i].append(0)
         elif 1<=i<=n_1:
@@ -141,7 +141,7 @@ def create_graph_rep(edge_matrix,n_1,n_2):
                 if j<=n_1+n_2:
                     graph_rep[i].append(0)
                 elif j>n_1+n_2:
-                    graph_rep[i].append(1)
+                    graph_rep[i].append(weights[i-1])
         elif i==n_1+n_2+1:
             #Sink
             for j in range(n_1+n_2+2):
