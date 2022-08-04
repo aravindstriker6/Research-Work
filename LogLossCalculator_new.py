@@ -189,12 +189,13 @@ def find_flow_and_split(top_level_indices, graph_rep_array, n_1, n_2, sink_idx,w
     graph_curr = csr_matrix(graph_rep_curr)
     flow_curr = maximum_flow(graph_curr, 0, len(top_level_indices) - 1)
     # Checking if full flow occurred, so no need to split
-    if flow_curr.flow_value == w_1_curr * w_2_curr:
-        set_classifier_prob_full_flow(top_level_indices, w_1_curr,w_2_curr, sink_idx)
-        return top_level_indices_1, top_level_indices_2, flow_curr
-    elif flow_curr.flow_value == 0:
+    if flow_curr.flow_value == 0:
         set_classifier_prob_no_flow(top_level_indices, n_1, sink_idx)
         return top_level_indices_1, top_level_indices_2, flow_curr
+    elif flow_curr.flow_value == w_1_curr * w_2_curr:
+        set_classifier_prob_full_flow(top_level_indices, w_1_curr,w_2_curr, sink_idx)
+        return top_level_indices_1, top_level_indices_2, flow_curr
+   
     # Finding remaining capacity edges
     remainder_array = graph_curr - flow_curr.residual
 
@@ -262,10 +263,14 @@ def log_loss(final_classifier_probs,n_1,n_2,n_blocks):
     target = 0
     for i in range(0, n_blocks):
         for j in range(0, int(n_1 / n_blocks)):
+            if classifier_probs[j + target]==0:
+                 continue
             loss_matrix[i][0] += (np.log(classifier_probs[j + target][0]))
         target = target + int(n_1 / n_blocks)
     for i in range(0, 2):
         for j in range(0, int(n_2 / n_blocks)):
+            if classifier_probs[j + target]==0:
+                 continue
             loss_matrix[i][1] += (np.log(classifier_probs[j + target][1]))
         target = target + int(n_2 / n_blocks)
     final_loss_matrix = (-1 * loss_matrix / len(classifier_probs))
