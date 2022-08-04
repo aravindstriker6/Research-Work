@@ -258,22 +258,22 @@ def optimal_log_loss(edge_matrix,class1_subsample_size,class2_subsample_size,n_b
     time2 = time.clock()
     time_taken=time2-time1
     return classifier_probs, n_1, n_2,time_taken
-def log_loss(final_classifier_probs,n_1,n_2,n_blocks):
+def log_loss(final_classifier_probs,n_1,n_2,n_blocks,weights):
     loss_matrix = np.empty([n_blocks, n_blocks], dtype=float)
     target = 0
     for i in range(0, n_blocks):
         for j in range(0, int(n_1 / n_blocks)):
             if classifier_probs[j + target]==0:
                  continue
-            loss_matrix[i][0] += (np.log(classifier_probs[j + target][0]))
+            loss_matrix[i][0] += weights[j+target]*(np.log(classifier_probs[j + target][0]))
         target = target + int(n_1 / n_blocks)
-    for i in range(0, 2):
+    for i in range(0, n_blocks):
         for j in range(0, int(n_2 / n_blocks)):
             if classifier_probs[j + target]==0:
                  continue
-            loss_matrix[i][1] += (np.log(classifier_probs[j + target][1]))
+            loss_matrix[i][1] += weights[j+target]*(np.log(classifier_probs[j + target][1]))
         target = target + int(n_2 / n_blocks)
-    final_loss_matrix = (-1 * loss_matrix / len(classifier_probs))
+    final_loss_matrix = (-1 * loss_matrix / np.sum(weights))
     final_loss = final_loss_matrix.sum()
     return final_loss, final_loss_matrix
 
