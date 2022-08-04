@@ -235,7 +235,7 @@ def optimal_log_loss(edge_matrix,class1_subsample_size,class2_subsample_size,n_b
     n_2 = class2_subsample_size * n_blocks
     weights = np.random.randint(0, 100, n_1 + n_2)
     # Create graph representation
-    graph_rep_array = create_graph_rep(edge_matrix, n_1, n_2)
+    graph_rep_array = create_graph_rep(edge_matrix, n_1, n_2,weights)
 
     time1 = time.clock()
     q = queue.Queue()
